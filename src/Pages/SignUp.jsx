@@ -1,8 +1,13 @@
 import React from 'react'
 import {AiFillEyeInvisible, AiFillEye} from 'react-icons/ai'
 import { useState } from 'react'
-import {Link} from 'react-router-dom'
+import { Link} from 'react-router-dom'
 import GAuth from '../components/GAuth'
+import {createUserWithEmailAndPassword, getAuth,updateProfile} from "firebase/auth"
+import {db} from "../firebase"
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
+import { useNavigate } from 'react-router-dom'
+import {toast} from 'react-toastify'
 
 export default function SignUp() {
   
@@ -14,13 +19,39 @@ export default function SignUp() {
     email: "",
     password: ""
   })
+  //
   const {email,password,name} = formData
-  function onChange(e){
+  const navigate = useNavigate()
+   function onChange(e){
 setformData((prevState)=>({
   ...prevState,
   [e.target.id]: e.target.value
 })
   )}
+  //authentication
+  async  function submitting(e){ 
+    e.preventDefault()
+    try {
+      const auth = getAuth()
+      const userDetail = await createUserWithEmailAndPassword(auth,email,password)
+      updateProfile(auth.currentUser,{
+        displayName:name
+      })
+      //deleting password and saving your details to the firestore
+      const user = userDetail.user
+      const formDataCopy = {...formData}
+      delete formDataCopy.password
+      formDataCopy.timestamp = serverTimestamp()
+      await setDoc(doc(db,"users",user.uid),formDataCopy)
+      navigate("/")
+      
+    } catch (error) {
+      //using react toastify to alert error messages
+toast.error("something went wrong, please follow instructions")
+
+    }
+
+  }
   return (
     <section>
       <h1 className='text-3xl text-center mt-6 font-bold'> Sign In</h1>
@@ -31,7 +62,7 @@ setformData((prevState)=>({
           src='https://images.pexels.com/photos/101808/pexels-photo-101808.jpeg?auto=compress&cs=tinysrgb&w=400 ' alt='key'/>
         </div>
         <div className='w-full md:w-[67%] lg:w-[40%] lg:ml-20'>
-          <form >
+          <form onSubmit={submitting} >
             <input className='text-xl text-gray-700
              transition
              ease-in-out rounded border-gray-300
