@@ -54,7 +54,7 @@ toast.error("something went wrong, please follow instructions")
   }
   return (
     <section>
-      <h1 className='text-3xl text-center mt-6 font-bold'> Sign In</h1>
+      <h1 className='text-3xl text-center mt-6 font-bold'> Sign Up</h1>
       <div className=' flex justify-center flex-wrap items-center 
       py-10 px-6 max-w-6xl max-auto'>
         <div className='md:w-[67%] lg:w-[50%] mb-12 md:mb-6'>

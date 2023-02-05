@@ -8,9 +8,8 @@ import { db } from '../firebase'
  import { useNavigate } from 'react-router-dom'
 export default function GAuth() {
   const navigate = useNavigate()
-
+// sign it with Google account 
   async  function  onGoogleClick(){
-
     try{
       const auth = getAuth()
       const provider = new

@@ -1,9 +1,10 @@
 import React from 'react'
 import {AiFillEyeInvisible, AiFillEye} from 'react-icons/ai'
 import { useState } from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import GAuth from '../components/GAuth'
-
+import { signInWithEmailAndPassword, getAuth } from 'firebase/auth'
+import { toast } from 'react-toastify'
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState((false))
   const [formData,setformData] = useState({
@@ -11,12 +12,27 @@ export default function SignIn() {
     password: ""
   })
   const {email,password} = formData
+  const Navigate = useNavigate()
+
   function onChange(e){
 setformData((prevState)=>({
   ...prevState,
   [e.target.id]: e.target.value
 })
   )}
+
+  async function submitting(e){
+    e.preventDefault()
+    try{
+const auth = getAuth()
+const userDetail = await signInWithEmailAndPassword(auth,email,password)
+if(userDetail.user){
+  Navigate("/")
+}
+    }catch(error){
+      toast.error("user not found in our database")
+    }
+  }
   return (
     <section>
       <h1 className='text-3xl text-center mt-6 font-bold'> Sign In</h1>
@@ -27,8 +43,8 @@ setformData((prevState)=>({
           src='https://images.pexels.com/photos/101808/pexels-photo-101808.jpeg?auto=compress&cs=tinysrgb&w=400 ' alt='key'/>
         </div>
         <div className='w-full md:w-[67%] lg:w-[40%] lg:ml-20'>
-          <form >
-            <input className='text-xl text-gray-700
+          <form  onClick={submitting}>
+            <input required className='text-xl text-gray-700
              transition
              ease-in-out rounded border-gray-300
              bg-white w-full px-4 py-2 mb-6 ' type="email"
@@ -36,7 +52,7 @@ setformData((prevState)=>({
             placeholder= ' Email address:' />
 
             <div className='relative mb-6'>
-            <input className='text-xl text-gray-500
+            <input required className='text-xl text-gray-500
              transition
              ease-in-out rounded border-gray-300
              bg-white w-full px-4 py-2 '
