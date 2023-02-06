@@ -44,6 +44,9 @@ setformData((prevState)=>({
       formDataCopy.timestamp = serverTimestamp()
       await setDoc(doc(db,"users",user.uid),formDataCopy)
       navigate("/")
+      setformData.name("")
+      setformData.email("")
+      setformData.password("")
       
     } catch (error) {
       //using react toastify to alert error messages

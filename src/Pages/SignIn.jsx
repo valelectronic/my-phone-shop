@@ -30,7 +30,7 @@ if(userDetail.user){
   Navigate("/")
 }
     }catch(error){
-      toast.error("user not found in our database")
+      console.log(error)
     }
   }
   return (
