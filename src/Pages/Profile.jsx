@@ -1,10 +1,16 @@
-import { getAuth } from 'firebase/auth'
+import { getAuth, updateProfile } from 'firebase/auth'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
+import {toast} from 'react-toastify'
+import {doc,updateDoc} from "firebase/firestore"
+import {db} from "../firebase"
+
+
 
 export default function Profile() {
   const auth = getAuth()
   const navigate = useNavigate()
+  const [changeDetail, setChangeDetail] = useState()
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email
@@ -13,6 +19,34 @@ export default function Profile() {
   function logout (){
     auth.signOut()
     navigate("/")
+  }
+ function change(e){
+    setFormData((prevState)=>({
+      ...prevState,
+      [e.target.id]: e.target.value
+    }))
+
+  }
+ async function onsubmit(){
+    try {
+      if(auth.displayName !==name ){
+        //update display name in firebase  authentication
+        await updateProfile(auth.currentUser, {
+          displayName: name
+        })
+        //update the name in the firestore
+        const docRef = doc(db, "users" ,auth.currentUser.uid)
+        await updateDoc(docRef, {
+          name
+        })
+      }
+      toast.success("profile name updated successfully")
+      
+    } catch (error) {
+    toast.error("could not update the profile details")
+      
+    }
+
   }
   return (
    <>
@@ -23,20 +57,28 @@ export default function Profile() {
     <div className='w-full md:w-[50%] mt-6 px3'>
     <form >
       {/* name input */}
-      <input type="text" value={name}  id="name" disabled
-      className='mb-6 w-full px-4 py2 text-xl text-gray-700
+      <input type="text" onChange={change} value={name}  id="name" disabled = {!changeDetail}
+      className={`mb-6 w-full px-4 py2 text-xl text-gray-700
       bg-white border border-gray-300 rounded
-      transition ease-in-out l'  />
+      transition ease-in-out l ${changeDetail && "bg-red-300 bg-red-300"}`}  />
       {/* email input */}
-      <input type="email" value={email}  id="name" disabled
+      <input type="email" value={email}  id="name"
+       disabled 
       className='mb-6 w-full px-4 py2 text-xl text-gray-700
       bg-white border border-gray-300 rounded
       transition ease-in-out l'  />
       <div className='mb-6 flex justify-between whitespace-nowrap
       text-sm sm:text-lg '>
         <p className='flex items-center '>do you want to change your name? 
-        <span className='text-red-600 hover:text-red-700
-        transiton ease-in-out duration-200 ml-2 cursor-pointer'>Edit</span>
+        <span
+        onClick={ 
+          ()=>{
+            changeDetail && onsubmit()
+            setChangeDetail((prevState)=> !prevState)
+          }} className='text-red-600 hover:text-red-700
+        transiton ease-in-out duration-200 ml-2 cursor-pointer'>
+          {changeDetail ? "apply changes?" : "Edit"}
+        </span>
         </p>
         <p onClick={logout} className='text-blue-600
         hover:text-blue-800 transition duration-200 cursor-pointer'>sign out</p>
