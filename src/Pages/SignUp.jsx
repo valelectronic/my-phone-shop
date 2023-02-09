@@ -44,6 +44,7 @@ setformData((prevState)=>({
       formDataCopy.timestamp = serverTimestamp()
       await setDoc(doc(db,"users",user.uid),formDataCopy)
       navigate("/")
+      toast.success("welcome to our E-shop")
       setformData.name("")
       setformData.email("")
       setformData.password("")

@@ -27,10 +27,11 @@ setformData((prevState)=>({
 const auth = getAuth()
 const userDetail = await signInWithEmailAndPassword(auth,email,password)
 if(userDetail.user){
+  toast.success("welcome to our E-shop")
   Navigate("/")
 }
     }catch(error){
-      console.log(error)
+      toast.error("details not found in our database")
     }
   }
   return (

@@ -27,6 +27,7 @@ export default function GAuth() {
           timestamp: serverTimestamp()
         })
       )
+      toast.success("welcome to our E-shop")
       navigate("/")
 
     }catch(error){
