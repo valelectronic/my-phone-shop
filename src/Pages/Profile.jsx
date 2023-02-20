@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router'
 import {toast} from 'react-toastify'
 import {doc,updateDoc} from "firebase/firestore"
 import {db} from "../firebase"
+import {FcSmartphoneTablet} from "react-icons/fc"
+import {Link} from "react-router-dom"
 
 
 
@@ -84,6 +86,16 @@ export default function Profile() {
         hover:text-blue-800 transition duration-200 cursor-pointer'>sign out</p>
       </div>
     </form>
+    <button type='submit' className='w-full bg-blue-700 text-white
+    uppercase font-medium rounded shadow-md px-7 py-3 text-sm
+    font-medium hover:bg-blue-800 transition duration-150 ease-in-out
+    hover:shadow-lg active:bg-blue-900'>
+      <Link to="/create_listing" className='flex justify-center items-center'>
+      <FcSmartphoneTablet className='mr-2 border-2 text-3xl bg-red-300 rounded-full '/>
+      sell your mobile phone
+      </Link>
+   
+    </button>
    </div>
    </section>
    
