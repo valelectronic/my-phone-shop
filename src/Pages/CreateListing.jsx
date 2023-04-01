@@ -1,8 +1,22 @@
 import React, { useState } from 'react'
+import Spinner from "../components/Spinner"
+import {toast} from "react-toastify"
+import {getAuth} from "firebase/auth"
+import {v4 as uuidv4}  from "uuid"
+import {db} from '../firebase'
+import {useNavigate} from 'react-router-dom'
+import {collection, serverTimestamp,addDoc} from 'firebase/firestore'
+import {getStorage,ref, uploadBytesResumable,getDownloadURL} from "firebase/storage"
 
 export default function CreateListing () {
+  const auth = getAuth()
+  const navigate = useNavigate()
+  
+  const [geolocationEnabled, setGeolocationEnabled] = useState(true)
+  
+  const [loading,setLoading] = useState(false)
   const [input,setInput] = useState({
-    type: "yes",
+    type: true,
     name: "",
     ram: 2,
     rom: 16,
@@ -12,7 +26,10 @@ export default function CreateListing () {
     description: "",
     offer: true,
     regularPrice: 0,
-    discount: 0
+    discount: 0,
+    latitude:0,
+    longitude:0,
+    images: {}
 
   })
   const {type,
@@ -25,18 +42,127 @@ export default function CreateListing () {
     description,
     offer,
     regularPrice,
-    discount
+    discount,
+    latitude,
+    longitude,
+    images
   } = input
-  function change (){
+  function change (e){
+    let boolean = null
+    if(e.target.value === 'true'){
+      boolean = true
+    }
+    
+    if(e.target.value === 'false'){
+      boolean = false
+    }
+    //files
+    if(e.target.files){
+      setInput((prevState)=>({
+        ...prevState,
+        images: e.target.files
+
+      }))
+    }
+    //text/boolean/numbers
+if(!e.target.files){
+  setInput((prevState)=>({
+    ...prevState,
+    [e.target.id]: boolean ?? e.target.value
+  }))
+}
   }
+
+async function submitting(e){
+e.preventDefault()
+setLoading(true)
+if(+discount >=  +regularPrice){
+  setLoading(false)
+  toast.error("discounted price needs to be less than regular price")
+  return;
+}
+if(images.length > 6){
+  setLoading(false)
+  toast.error("maximum of 6 images allowed")
+  return;
+ 
+}
+
+
+
+async  function storeImage(image){
+  return new Promise((resolve,reject)=>{
+    const storage =getStorage()
+    const filename = `${auth.currentUser.uid}-${image.name}- ${uuidv4()}`
+    const storageRef = ref(storage, filename)
+    const uploadTask = uploadBytesResumable(storageRef, image)
+
+    uploadTask.on('state_changed', 
+  (snapshot) => {
+    // Observe state change events such as progress, pause, and resume
+    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log('Upload is ' + progress + '% done');
+    switch (snapshot.state) {
+      case 'paused':
+        console.log('Upload is paused');
+        break;
+      case 'running':
+        console.log('Upload is running');
+        break;
+    }
+  }, 
+  (error) => {
+    // Handle unsuccessful uploads
+    reject(error)
+  }, 
+  () => {
+    // Handle successful uploads on complete
+    // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      resolve( downloadURL);
+    });
+  }
+);
+  })
+
+}
+const imgUrls = await Promise.all(
+[...images].map((image)=> storeImage(image))
+  ).catch((error)=>{
+    setLoading(false);
+    toast.error("images not uploaded")
+    return
+  })
+
+const formDataCopy = {
+  ...input,
+  imgUrls,
+  timestamp:serverTimestamp()
+}
+delete formDataCopy.images;
+!formDataCopy.offer && delete formDataCopy.discount;
+delete formDataCopy.longitude
+delete formDataCopy.latitude
+const docRef = await addDoc(collection(db, 'listings'),formDataCopy)
+setLoading(false)
+toast.success("listing created")
+
+navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+}
+
+if(loading){
+  return <Spinner/>
+}
+
   return (
     <main className='max-w-md px-2 mx-auto'>
         <h1 className='text-3xl text-center mt-6 font-bold'> mobile phone features</h1>
-        <form>
+        <form onSubmit={submitting}>
             <p className='text-lg mt-6 font-semibold'> name </p>
             <input type="text" value={name} id="name" onChange={change}
             placeholder = "mobile phone name"  maxLength={32}
-            minLength = "10" required className='w-full px-4 py-2
+            minLength = "8" required className='w-full px-4 py-2
             text-xl text-gray-700 bg-white border border-gray-300
             transition duration-150 ease-in-out focus:text-gray-700
             focus:bg-white rounded focus:border-slate-600 mb-6'/>
@@ -54,7 +180,7 @@ export default function CreateListing () {
             <div>
               <p className='text-lg font-semibold'>ROM(GB)</p>
               <input type="number" id="rom" value={rom}
-              onChange = {change} min = '1' max='50'
+              onChange = {change} min = '1' max='200'
               required className='w-full px-4 py-2 text-lg text-gray-700 
              bg-white border rounded border-gray-300 transition duration-150
              ease-in-out focus:text-gray-700 focus:bg-white
@@ -63,19 +189,19 @@ export default function CreateListing () {
            </div>
              <p className='text-lg mt-6 font-semibold uppercase '>receipt available ?</p>
            <div className='flex mb-6'>
-              <button type='button' id='type' onClick={change} className = {`
+              <button type='button' value={true} id='type' onClick={change} className = {`
               px-7 py-3 font-medium mr-3 text-sm uppercase shadow-md rounded
               hover:shadow-lg focus:shadow-lg active:shadow-lg
               transition duration-150 ease-in-out w-full ${
-                type === "yes" ? "bg-white text-black": "bg-slate-600 text-white"
+                !type ? "bg-white text-black": "bg-slate-600 text-white"
               }`}> 
               yes
               </button>
-              <button type='button' id='type' onClick={change} className = {`
+              <button type='button' value={false} id='type' onClick={change} className = {`
               px-7 py-3 font-medium text-sm ml-3 uppercase shadow-md rounded
               hover:shadow-lg focus:shadow-lg active:shadow-lg
               transition duration-150 ease-in-out w-full ${
-                type === "no" ? "bg-white text-black": "bg-slate-600 text-white"
+                type ? "bg-white text-black": "bg-slate-600 text-white"
               }`}> 
               no
               </button>
@@ -125,6 +251,34 @@ export default function CreateListing () {
             text-xl text-gray-700 bg-white border border-gray-300
             transition duration-150 ease-in-out focus:text-gray-700
             focus:bg-white rounded focus:border-slate-600 mb-6'/>
+            {
+              !geolocationEnabled && (
+                <div className='flex space-x-6 mb-6'>
+                  <div>
+                    <p className='text-xl font-semibold'> latitude</p>
+                    <input type="number" value={latitude}  id="latitude"
+                    onChange={change}required 
+                    min='-90'
+                    max = '90'
+                    className='w-full px-4 py-2 text-xl text-gray-700
+                    bg-white border rounded border-gray-300 
+                    transition duration-150 ease-in-out focus:text-gray-700
+                     focus:bg-white focus:border-slate-600 text-center'  />
+                  </div>
+                  <div>
+                    <p className='text-xl font-semibold'> longitude</p>
+                    <input type="number" value={longitude}  id="longitude"
+                    onChange={change}required 
+                    min='-180'
+                    max = '180'
+                    className='w-full px-4 py-2 text-xl text-gray-700
+                    bg-white border rounded border-gray-300 
+                    transition duration-150 ease-in-out focus:text-gray-700
+                     focus:bg-white focus:border-slate-600 text-center'  />
+                  </div>
+                </div>
+              )
+            }
 
             <p className='text-lg  font-semibold'> Description </p>
             <textarea type="text" value={description} id="description" onChange={change}
@@ -144,7 +298,7 @@ export default function CreateListing () {
               }`}> 
               yes
               </button>
-              <button type='button' value={false} id='guarantee' onClick={change} className = {`
+              <button type='button' value={false} id='offer' onClick={change} className = {`
               px-7 py-3 font-medium text-sm ml-3 uppercase shadow-md rounded
               hover:shadow-lg focus:shadow-lg active:shadow-lg
               transition duration-150 ease-in-out w-full ${
@@ -173,7 +327,7 @@ export default function CreateListing () {
               </div>
             </div>
             {
-              offer === true && (
+              offer && (
                 <div>
               <div>
                 <p className='text-lg font-semibold'>discounted price</p>
@@ -199,14 +353,16 @@ export default function CreateListing () {
                     <div className='mt-6'>
                       <p className='text-lg font-semibold'>images</p>
                       <p className='text-gray-600'>the first image will be the cover(max 6)</p>
-                      <input type="file"  id="images " className='
+                      <input type="file"  id="images "    className='
                       w-full px-3 py-1.5 text-gray-600 bg-white
                       border border-gray-300 rounded transition
                       duration-150 ease-in-out focus:bg-white
                       focus:border-slate-600 '
                       accept='.jpg, .png,.jpeg'
                       multiple
-                      required onChange={change} 
+                      required
+                       onChange={change}
+  
                       />
                     </div>
                     <button type="submit" className='mt-6 w-full

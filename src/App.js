@@ -26,7 +26,10 @@ function App() {
 <Route path="/sign_in" element ={<SignIn/>}/>
 <Route path="/sign_up" element ={<SignUp/>}/>
 <Route path="/offers" element ={<Offers/>}/>
+<Route path="create_listing" element = {<PrivateRoute/>}>
 <Route path="/create_listing" element ={<CreateListing/>}/>
+</Route>
+
       </Routes>
      </Router>
      <ToastContainer
