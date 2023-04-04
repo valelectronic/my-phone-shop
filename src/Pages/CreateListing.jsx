@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Spinner from "../components/Spinner"
 import {toast} from "react-toastify"
 import {getAuth} from "firebase/auth"
@@ -138,7 +138,8 @@ const imgUrls = await Promise.all(
 const formDataCopy = {
   ...input,
   imgUrls,
-  timestamp:serverTimestamp()
+  timestamp:serverTimestamp(),
+  userRef: auth.currentUser.uid
 }
 delete formDataCopy.images;
 !formDataCopy.offer && delete formDataCopy.discount;
@@ -154,7 +155,6 @@ navigate(`/category/${formDataCopy.type}/${docRef.id}`)
 if(loading){
   return <Spinner/>
 }
-
   return (
     <main className='max-w-md px-2 mx-auto'>
         <h1 className='text-3xl text-center mt-6 font-bold'> mobile phone features</h1>
