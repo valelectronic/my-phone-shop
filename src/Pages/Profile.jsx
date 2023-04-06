@@ -86,7 +86,7 @@ export default function Profile() {
 
   }
   function onEdit(listingID){
-    navigate(`/editing-listing/${listingID}`)
+    navigate(`/edit-listing/${listingID}`)
 
   }
   return (
