@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import Moment from "react-moment"
 import {MdLocationOn} from "react-icons/md"
 import {TbCurrencyNaira} from "react-icons/tb"
+import {FaTrash} from "react-icons/fa"
+import {MdModeEdit} from "react-icons/md"
 
-export default function ListingItem({ listing, id }) {
+export default function ListingItem({ listing, id,onDelete,onEdit }) {
     return <li className='bg-white flex relative flex-col justify-between
     items-center shadow-md hover:shadow-xl rounded-md overflow-hidden
     transition-shadow duration-150 m-[10px] '>
@@ -45,8 +47,19 @@ export default function ListingItem({ listing, id }) {
           </div>
 
         </div>
-  
       </Link>
+      {onDelete &&(
+        <FaTrash className='absolute bottom-2 right-2
+        h-[15px] cursor-pointer text-red-500'  
+        onClick = {(()=>onDelete(listing.id))}
+        />
+      ) }
+      {onEdit &&(
+        <MdModeEdit className='absolute bottom-2 right-9
+        h-4 cursor-pointer '  
+        onClick = {(()=>onEdit(listing.id))}
+        />
+      ) }
     </li>;
 
   }

@@ -2,7 +2,7 @@ import { getAuth, updateProfile } from 'firebase/auth'
 import React, { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import {toast} from 'react-toastify'
-import {doc,updateDoc,getDocs,where,collection,orderBy,query} from "firebase/firestore"
+import {doc,updateDoc,getDocs,where,collection,orderBy,query, deleteDoc} from "firebase/firestore"
 import {db} from "../firebase"
 import {FcSmartphoneTablet} from "react-icons/fc"
 import {Link} from "react-router-dom"
@@ -75,6 +75,20 @@ export default function Profile() {
     }
     fetchUserListings();
   }, [auth.currentUser.uid]);
+  async function onDelete(listingID){
+    if(window.confirm("are you sure you want to delete?")){
+      await deleteDoc(doc(db, "listings", listingID))
+      const updatedListings = listings.filter((listing)=> listing.id
+      !== listingID)
+      setListings(updatedListings)
+      toast.success("successfully removed your product")
+    }
+
+  }
+  function onEdit(listingID){
+    navigate(`/editing-listing/${listingID}`)
+
+  }
   return (
    <>
    <section className='max-w-6xl mx-auto flex
@@ -134,6 +148,8 @@ export default function Profile() {
                 key={listing.id}
                 id={listing.id}
                 listing={listing.data}
+                onDelete= {()=>onDelete(listing.id)}
+                onEdit= {()=>onEdit(listing.id)}
               />
                 
 ))}
