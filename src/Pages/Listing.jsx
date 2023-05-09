@@ -11,7 +11,10 @@ import SwiperCore, {
   Pagination,
 } from "swiper";
 import "swiper/css/bundle";
-import {FaShare} from "react-icons/fa"
+import {FaShare,FaMapMarkerAlt,FaMemory} from "react-icons/fa"
+import {TbCurrencyNaira} from "react-icons/tb"
+import {MdMemory, MdSecurityUpdateGood} from 'react-icons/md'
+
 
 export default function Listing() {
     const params = useParams()
@@ -38,25 +41,25 @@ export default function Listing() {
   return (
     <main>
     <Swiper
-      slidesPerView={1}
-      navigation
-      pagination={{ type: "progressbar" }}
-      effect="fade"
-      modules={[EffectFade]}
-      autoplay={{ delay: 3000 }}
-    >
-      {listing.imgUrls.map((url, index) => (
-        <SwiperSlide key={index}>
-          <div
-            className="relative w-full overflow-hidden h-[300px]"
-            style={{
-              background: `url(${listing.imgUrls[index]}) center no-repeat`,
-              backgroundSize: "cover",
-            }}
-          ></div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
+        slidesPerView={1}
+        navigation
+        pagination={{ type: "progressbar" }}
+        effect="fade"
+        modules={[EffectFade]}
+        autoplay={{ delay: 3000 }}
+      >
+        {listing.imgUrls.map((url, index) => (
+          <SwiperSlide key={index}>
+            <div
+              className="relative w-full overflow-hidden h-[300px]"
+              style={{
+                background: `url(${listing.imgUrls[index]}) center no-repeat`,
+                backgroundSize: "cover",
+              }}
+            ></div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     <div className='fixed top-[13%] right-[3%] z-10 bg-white cursor-pointer
    border-2 border-gray-400 rounded-full w-12 h-12 flex
    justify-center items-center ' onClick={()=>{
@@ -74,6 +77,67 @@ setShareLink(false)
           Link Copied
         </p>
       )}
+      <div className='flex flex-col md:flex-row max-w-6xl
+      lg:mx-auto m-4 p-4 rounded-lg  shadow-lg bg-white
+      lg:space-x-5'>
+       <div className=' w-full h-[200px] lg-[400px]'>
+        <p className='text-2xl font-bold mb-3 text-blue-900'>
+        {listing.name} - #{""}  {listing.offer ? listing.discount
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+         :listing.regular 
+         .toString()
+         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")} 
+         {listing.offer === true ? " [promo]" : ""}
+</p> 
+<p className='flex items-center mt-6 mb-3 font-semibold'>
+  <FaMapMarkerAlt className='text-green-700 mr-2'/>
+  {listing.address}</p>
+
+  <div className='flex justify-start items-center space-x-4 w -[75%]'>
+    <p className='bg-red-800 w-full max-w-[200px]
+    rounded-md p-1 text-white text-center font-semibold
+    shadow-md'>{ listing.guarantee === true  ? "GUARANTEED" : "NO RECEIPT"}</p>
+  <p className='w-full max-w-[200px] bg-green-800 p-1 text-white 
+    text-center font-semibold shadow-md rounded-md' >
+    {listing.offer && (
+      <p>#{
+        +listing.regularPrice - +listing.discount} discount</p>
+    )}
+  </p>
+  
+  </div>
+  <p className='mt-3 mb-3'>
+    <span className='font-semibold'>Description - </span>
+    { listing.description}
+  </p>
+
+<p>
+<div>
+    <ul className='flex items-center space-x-3 sm:space-x-10 text-lg
+    font-semibold '>
+      <li className='flex items-center whitespace-nowrap'>
+        <MdMemory className='text-lg mr-1 bg-blue-900 rounded-sm'/>
+        {listing.rom}
+      </li>
+      <li className='flex items-center whitespace-nowrap'>
+        <FaMemory className='text-lg mr-1 bg-blue-900 rounded-sm'/>
+        {listing.ram}
+      </li>
+      <li className='flex items-center whitespace-nowrap'>
+        <MdSecurityUpdateGood className='text-lg mr-1 bg-green-600 rounded-sm'/>
+        {listing.repaid === true ? "Brand New" : "Fairly Used"}
+      </li>
+     
+    </ul>
+  </div>
+</p>
+  
+       </div>
+       <div className='bg-blue-300 w-full h-[200px] lg-[400px] z-10
+       overflow-x-hidden'></div>
+      </div>
   </main>
+  
   )
 }
