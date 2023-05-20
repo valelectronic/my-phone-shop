@@ -56,9 +56,15 @@ export default function Slider() {
       <SwiperSlide key={id}  onClick={()=> navigate(`/category/${data.type}
       /${id}`)}>
 <div style={{background: `url(${data.imgUrls[0]})center, no-repeat`,
-backgroundSize: 'cover'}} className='w-full h-[300px] overflow-hidden'>
+backgroundSize: 'cover'}} className='relative w-full h-[300px] overflow-hidden'>
 
 </div>
+<p className='text-[#f1faee] absolute left-1 top-3
+font-medium max-w-[90%] bg-[#457b9d] shadow-lg opacity-90
+rounded-br-3xl' >{data.name}</p>
+<p className='text-[#f1faee] absolute left-1 bottom-1
+font-medium max-w-[90%] bg-[#e63946] shadow-lg opacity-90
+rounded-br-3xl' >#{data.discount ?? data.regularPrice}</p>
       </SwiperSlide>  
     ))}
    </Swiper>
