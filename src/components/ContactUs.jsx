@@ -2,6 +2,8 @@ import { doc, getDoc } from 'firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
 import { db } from '../firebase'
 import {toast} from "react-toastify"
+import {IoLogoWhatsapp} from "react-icons/io"
+import {FiPhoneCall} from "react-icons/fi"
 
 export default function ContactUs({userRef,listing}) {
     const [owner, setOwner] = useState(null)
@@ -32,6 +34,7 @@ export default function ContactUs({userRef,listing}) {
           <textarea name="message" 
           id="message" rows="2" value={message}
           onChange={Change}
+          required
           placeholder='how may we help you?'
           className='w-full px-4 py-2 text-lg text-gray-700 bg-white border
           border-gray-300 rounded transition duration-150 ease-in-out
@@ -52,6 +55,20 @@ export default function ContactUs({userRef,listing}) {
           </a>
     </div>
 )}
+<div>
+<ul className='flex items-center space-x-5 sm:space-x-11 text-lg
+    font-semibold ' >
+<li className='flex items-center whitespace-nowrap'>
+        <IoLogoWhatsapp className='text-xl mr-1 bg-green-600 rounded-sm'/>
+        {listing.whatsapp}
+      </li>
+      <li className='flex items-center whitespace-nowrap'>
+        <FiPhoneCall className='text-xl mr-1 bg-green-600 rounded-sm'/>
+        {listing.Number}
+      </li>
+</ul>
+
+</div>
     </>
   )
 }

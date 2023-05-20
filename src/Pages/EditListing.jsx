@@ -28,8 +28,8 @@ export default function CreateListing () {
     offer: true,
     regularPrice: 0,
     discount: 0,
-    latitude:0,
-    longitude:0,
+    whatsapp:"",
+    Number:"",
     images: {}
 
   })
@@ -44,8 +44,8 @@ export default function CreateListing () {
     offer,
     regularPrice,
     discount,
-    latitude,
-    longitude,
+    whatsapp,
+    Number,
     images
   } = input
 
@@ -285,34 +285,28 @@ if(loading){
             text-xl text-gray-700 bg-white border border-gray-300
             transition duration-150 ease-in-out focus:text-gray-700
             focus:bg-white rounded focus:border-slate-600 mb-6'/>
-            {
-              !geolocationEnabled && (
-                <div className='flex space-x-6 mb-6'>
+          
+          <div className=' mb-4'>
                   <div>
-                    <p className='text-xl font-semibold'> latitude</p>
-                    <input type="number" value={latitude}  id="latitude"
-                    onChange={change}required 
-                    min='-90'
-                    max = '90'
-                    className='w-full px-4 py-2 text-xl text-gray-700
-                    bg-white border rounded border-gray-300 
-                    transition duration-150 ease-in-out focus:text-gray-700
-                     focus:bg-white focus:border-slate-600 text-center'  />
+                    <p className='text-xl font-semibold'>whatsapp number</p>
+                    <input type="number" value={whatsapp} id="whatsapp" onChange={change}
+            placeholder = "whatsapp number"  maxLength={11}
+            minLength = "11" required className='w-full px-4 py-2
+            text-xl text-gray-700 bg-white border border-gray-300
+            transition duration-150 ease-in-out focus:text-gray-700
+            focus:bg-white rounded focus:border-slate-600 mb-6'/>
+            
                   </div>
-                  <div>
-                    <p className='text-xl font-semibold'> longitude</p>
-                    <input type="number" value={longitude}  id="longitude"
-                    onChange={change}required 
-                    min='-180'
-                    max = '180'
-                    className='w-full px-4 py-2 text-xl text-gray-700
-                    bg-white border rounded border-gray-300 
-                    transition duration-150 ease-in-out focus:text-gray-700
-                     focus:bg-white focus:border-slate-600 text-center'  />
+              <div>
+                    <p className='text-xl font-semibold'> mobile number</p>
+                    <input type="number" value={Number} id="Number" onChange={change}
+            placeholder = "mobile number"  maxLength={11}
+            minLength = "11" required className='w-full px-4 py-2
+            text-xl text-gray-700 bg-white border border-gray-300
+            transition duration-150 ease-in-out focus:text-gray-700
+            focus:bg-white rounded focus:border-slate-600 mb-6'/>
                   </div>
                 </div>
-              )
-            }
 
             <p className='text-lg  font-semibold'> Description </p>
             <textarea type="text" value={description} id="description" onChange={change}

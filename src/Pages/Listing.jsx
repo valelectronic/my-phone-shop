@@ -88,13 +88,14 @@ setShareLink(false)
       lg:space-x-5'>
        <div className=' w-full'>
         <p className='text-2xl font-bold mb-3 text-blue-900'>
-        {listing.name} - #{""}  {listing.offer ? listing.discount
+        {listing.name} -  #{""}  {listing.offer ? listing.regularPrice
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-         :listing.regular 
+        :listing.regularPrice
          .toString()
          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")} 
-         {listing.offer === true ? " [promo]" : ""}
+         {listing.offer ? "" : " "}
+         
 </p> 
 <p className='flex items-center mt-6 mb-3 font-semibold'>
   <FaMapMarkerAlt className='text-green-700 mr-2'/>
@@ -108,9 +109,12 @@ setShareLink(false)
     text-center font-semibold shadow-md rounded-md' >
     {listing.offer && (
       <p>#{
-        +listing.regularPrice - +listing.discount} discount</p>
-    )}
+        
+         +listing.regularPrice - +listing.discount
+        } discount</p>
+    ) }
   </p>
+  
   
   </div>
   <p className='mt-3 mb-3'>
@@ -155,9 +159,9 @@ setShareLink(false)
     <ContactUs userRef = {listing.userRef} listing = {listing} />
   )
 }
+
        </div>
-       <div className='bg-blue-300 w-full h-[200px] lg-[400px] z-10
-       overflow-x-hidden mt-2'></div>
+      
       </div>
   </main>
   
