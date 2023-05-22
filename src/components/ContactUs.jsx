@@ -59,8 +59,8 @@ export default function ContactUs({userRef,listing}) {
 <ul className='flex items-center space-x-5 sm:space-x-11 text-lg
     font-semibold ' >
 <li className='flex items-center whitespace-nowrap'>
-        <IoLogoWhatsapp className='text-xl mr-1 bg-green-600 rounded-sm'/>
-        {listing.whatsapp}
+<IoLogoWhatsapp className='text-xl mr-1 bg-green-600 rounded-sm'/>
+{listing.whatsapp}
       </li>
       <li className='flex items-center whitespace-nowrap'>
         <FiPhoneCall className='text-xl mr-1 bg-green-600 rounded-sm'/>
