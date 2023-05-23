@@ -57,9 +57,9 @@ fetchListings()
           })
         })
         setReceptListing(listings)
-        console.log(listings)
+        
       } catch (error) {
-        console.log(error)
+        
         
       }
 
@@ -86,9 +86,7 @@ fetchListings()
           })
         })
         setRepaidtListing(listings)
-        console.log(listings)
       } catch (error) {
-        console.log(error)
         
       }
 
