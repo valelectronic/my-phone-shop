@@ -81,7 +81,9 @@ async function LoadMore(){
 <>
 <main>
             <ul className="sm:grid sm:grid-cols-2 
-            lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            lg:gr
+            
+            id-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {listings.map((listing) => (
                 <ListingItem
                   key={listing.id}
@@ -101,7 +103,9 @@ async function LoadMore(){
           )}
 </>
 ): (
-  <p>there are no current offers</p>
+  <p>there are no current {params.categoryName === "repaid" ? "phones with issues"
+
+:"phones with receipt"}</p>
 )
   }
     </div>
