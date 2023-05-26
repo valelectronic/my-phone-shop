@@ -1,5 +1,5 @@
 import { doc, getDoc } from 'firebase/firestore'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { db } from '../firebase'
 import {toast} from "react-toastify"
 import {IoLogoWhatsapp} from "react-icons/io"

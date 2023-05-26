@@ -108,7 +108,7 @@ export default function Profile() {
       className='mb-6 w-full px-4 py2 text-xl text-gray-700
       bg-white border border-gray-300 rounded
       transition ease-in-out l'  />
-      <div className='mb-6 flex justify-between whitespace-nowrap
+      <div className='mb-6 flex justify-around whitespace-nowrap
       text-sm sm:text-lg '>
         <p className='flex items-center '>do you want to change your name? 
         <span
@@ -125,13 +125,13 @@ export default function Profile() {
         hover:text-blue-800 transition duration-200 cursor-pointer'>sign out</p>
       </div>
     </form>
-    <button type='submit' className='w-full bg-blue-700 text-white
+    <button type='submit' className='mt-3 w-full bg-blue-700 text-white
     uppercase font-medium rounded shadow-md px-7 py-3 text-sm
     font-medium hover:bg-blue-800 transition duration-150 ease-in-out
     hover:shadow-lg active:bg-blue-900'>
       <Link to="/create_listing" className='flex justify-center items-center'>
       <FcSmartphoneTablet className='mr-2 border-2 text-3xl bg-red-300 rounded-full '/>
-      sell your mobile phone
+      set up your phone shop
       </Link>
    
     </button>

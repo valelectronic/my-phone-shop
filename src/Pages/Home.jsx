@@ -7,6 +7,9 @@ import { Link } from 'react-router-dom'
 import ListingItem from '../components/ListingItem'
 
 
+
+// add a filter or search to the home page
+
 export default function Home() {
   // offers
   const [offerListing, setOffListing] = useState(null)
@@ -74,7 +77,7 @@ fetchListings()
         // get reference
         const listingRef = collection(db, "listings")
         // create the query
-        const q = query(listingRef, where("repaid", "==", true),
+        const q = query(listingRef, where("offer", "==", false),
         orderBy("timestamp", "desc"), limit(4))
         // execute the query
         const querySnap = await getDocs(q)
@@ -98,12 +101,12 @@ fetchListings()
       <Slider/>
       <div className='max-w-6xl mx-auto pt-4 space-y-6'>
         {offerListing && offerListing.length> 0 && (
-          <div  className='m-2 mb-6 font-semibold'>
-            <h2>phones with offers</h2>
+          <div  className='mt-2 mb-6 font-semibold '>
+            <h2 className='mb-2 text-center font-bold mt-4 uppercase'>phones with offer</h2>
             <Link  to = "/offers">
-              <p className='px-3 text-sm text-blue-600
+              <p className='mb-2 mt-2 px-3 text-lg text-blue-600
               hover:text-blue-800 transition duration-150
-              ease-in-out'>click to show more phones with offers</p>
+              ease-in-out'>click to show more phones with offer</p>
             </Link>
             <ul className='sm:grid sm:grid-cols-2 lg:grid-cols-3'>
               {offerListing.map((listing)=>(
@@ -111,13 +114,32 @@ fetchListings()
                  id={listing.id}/>
               ))}
             </ul>
+            
+          </div>
+          
+        )}
+        {repaidtListing && repaidtListing.length> 0 && (
+          <div  className='mt-6 mb-6 font-semibold'>
+            <h2 className='text-center font-bold mt-4 uppercase'> phones with no offer</h2>
+            <Link  to = "/category/repaid">
+              <p className='mb-2 mt-2 px-3 text-lg text-blue-600
+              hover:text-blue-800 transition duration-150
+              ease-in-out'>click to show more phones with no offer</p>
+            </Link>
+            <ul className='sm:grid sm:grid-cols-2 lg:grid-cols-3'>
+              {repaidtListing.map((listing)=>(
+                <ListingItem key={listing.id} listing={listing.data}
+                 id={listing.id}/>
+              ))}
+            </ul>
+           
           </div>
         )}
         {receiptListing && receiptListing.length> 0 && (
-          <div  className='m-2 mb-6 font-semibold'>
-            <h2>phones with receipt</h2>
+          <div  className='mt-6 mb-6 font-semibold'>
+            <h2 className='text-center font-bold mt-4 uppercase'>phones with receipt</h2>
             <Link  to = "/category/receipt">
-              <p className='px-3 text-sm text-blue-600
+              <p className='mb-2 mt-2 px-3 text-lg text-blue-600
               hover:text-blue-800 transition duration-150
               ease-in-out'>click to show more phones with receipt</p>
             </Link>
@@ -127,25 +149,10 @@ fetchListings()
                  id={listing.id}/>
               ))}
             </ul>
+            
           </div>
         )}
-        
-        {repaidtListing && repaidtListing.length> 0 && (
-          <div  className='m-2 mb-6 font-semibold'>
-            <h2>phones worked on before</h2>
-            <Link  to = "/category/repaid">
-              <p className='px-3 text-sm text-blue-600
-              hover:text-blue-800 transition duration-150
-              ease-in-out'>click to show more phones issue before</p>
-            </Link>
-            <ul className='sm:grid sm:grid-cols-2 lg:grid-cols-3'>
-              {repaidtListing.map((listing)=>(
-                <ListingItem key={listing.id} listing={listing.data}
-                 id={listing.id}/>
-              ))}
-            </ul>
-          </div>
-        )}
+      
         
       </div>
     </div>

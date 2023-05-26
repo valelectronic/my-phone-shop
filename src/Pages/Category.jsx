@@ -16,9 +16,9 @@ function Category() {
     async function fetchListings(){
       try {
         const listingRef = collection(db,"listings")
-        const q = query(listingRef,where("repaid", "==", true), 
+        const q = query(listingRef,where("guarantee", "==", true), 
         orderBy("timestamp", "desc"),
-        limit(8) )
+        limit(4) )
         const querySnap = await getDocs(q)
 
         const lastVisible = querySnap.docs[querySnap.docs.length - 1];
@@ -44,7 +44,7 @@ function Category() {
 async function LoadMore(){
   try {
     const listingRef = collection(db,"listings")
-    const q = query(listingRef,where("repaid", "==",true), 
+    const q = query(listingRef,where("offer", "==",false), 
     orderBy("timestamp", "desc"),
     startAfter(lastPage),
     limit(4) )
@@ -73,7 +73,7 @@ async function LoadMore(){
     <div className='max-w-6xl max-auto px-3 '>
 <h1 className='text-3xl text-center mt-6 font-bold mb-6'>
 {params.categoryName === "receipt" ?"phones with receipt" :
-  "phones with issues before" }
+  "phones with no offers" }
 </h1>
 {loading ? (
   <Spinner/>
