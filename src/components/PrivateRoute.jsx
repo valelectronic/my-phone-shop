@@ -1,11 +1,11 @@
 
 import { Navigate, Outlet } from 'react-router-dom'
-import { userAuthStatus } from '../hooks/userAuthStatus'
+import { UserAuthStatus } from '../hooks/UserAuthStatus'
 import Spinner from './Spinner'
 
 
 export default function PrivateRoute() {
-    const {loggedIn, loading} = userAuthStatus()
+    const {loggedIn, loading} = UserAuthStatus()
     if(loading){
         return <><Spinner/></>
     }
