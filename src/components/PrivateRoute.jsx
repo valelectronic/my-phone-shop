@@ -1,8 +1,7 @@
 
 import { Navigate, Outlet } from 'react-router-dom'
-import UserAuthStatus from "../hooks/UserAuthStatus"
 import Spinner from './Spinner'
-
+import UserAuthStatus from '../hooks/UserAuthStatus'
 
 export default function PrivateRoute() {
     const {loggedIn, loading} = UserAuthStatus()
